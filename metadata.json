@@ -1,0 +1,5 @@
+{
+  "name": "AME.VN Warehouse Management",
+  "description": "A warehouse management application for tracking inventory, logging stock movements, and generating QR codes for items. Designed for distributors of industrial equipment and spare parts.",
+  "requestFramePermissions": []
+}
