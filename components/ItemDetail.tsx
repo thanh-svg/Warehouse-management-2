@@ -1,5 +1,6 @@
+
 import React, { useRef } from 'react';
-import { Item, Event, EventType } from '../types';
+import { Item, EventType } from '../types';
 import { ChevronLeftIcon, PrintIcon } from './icons';
 import Button from './Button';
 import PrintableQRCode from './PrintableQRCode';
@@ -25,21 +26,36 @@ const ItemDetail: React.FC<ItemDetailProps> = ({ item, onBack }) => {
     const handlePrint = () => {
         const printContent = printableRef.current;
         if (printContent) {
-            const printWindow = window.open('', '', 'height=600,width=800');
+            const printWindow = window.open('', '', 'height=800,width=600');
             if (printWindow) {
-                printWindow.document.write('<html><head><title>Print QR Code</title>');
+                printWindow.document.write('<html><head><title>Print Item Label</title>');
                 printWindow.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
-                printWindow.document.write('</head><body >');
-                printWindow.document.write('<div class="p-10 flex justify-center items-center h-screen">');
-                printWindow.document.write(printContent.innerHTML);
-                printWindow.document.write('</div>');
+                printWindow.document.write(`
+                    <style>
+                        @media print {
+                            body { 
+                                display: flex; 
+                                justify-content: center; 
+                                align-items: center; 
+                                height: 100vh; 
+                                margin: 0; 
+                            }
+                            @page { 
+                                size: auto; 
+                                margin: 0; 
+                            }
+                        }
+                    </style>
+                `);
+                printWindow.document.write('</head><body class="bg-white">');
+                printWindow.document.write(printContent.outerHTML);
                 printWindow.document.write('</body></html>');
                 printWindow.document.close();
                 printWindow.focus();
-                setTimeout(() => { // allow content to load
+                setTimeout(() => { 
                     printWindow.print();
                     printWindow.close();
-                }, 250);
+                }, 500);
             }
         }
     };
@@ -94,7 +110,7 @@ const ItemDetail: React.FC<ItemDetailProps> = ({ item, onBack }) => {
                 </dl>
             </div>
             <div className="flex justify-center items-center p-4 border rounded-lg bg-gray-50">
-               <div className="text-center">
+               <div className="text-center transform scale-90 origin-top">
                 <PrintableQRCode item={item} />
                </div>
             </div>
